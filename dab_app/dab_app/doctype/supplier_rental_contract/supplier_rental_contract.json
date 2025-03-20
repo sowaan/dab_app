@@ -1,0 +1,555 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "naming_series:",
+ "creation": "2025-03-06 13:49:32.130294",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_5tqc",
+  "naming_series",
+  "supplier",
+  "check_in_date",
+  "check_out_date",
+  "declaration",
+  "text_editor_fluj",
+  "check_out_kilometers",
+  "check_out_fuel",
+  "check_in_kilometers",
+  "check_in_fuel",
+  "column_break_wdjw",
+  "status",
+  "check",
+  "cost_center",
+  "contract_type",
+  "contract_start_date",
+  "contract_end_date",
+  "vehicle",
+  "plate_number",
+  "chassis_number",
+  "engine_number",
+  "color",
+  "brand",
+  "make_and_model",
+  "model",
+  "model_year",
+  "fuel_level",
+  "odometer_reading",
+  "kms_per_month__year",
+  "section_break_jspl",
+  "air_conditioner",
+  "antenna",
+  "ash_tray",
+  "fe",
+  "floor_mats",
+  "jack",
+  "lighter",
+  "lights",
+  "mulkia",
+  "reg_card",
+  "spare_tyre",
+  "toolkit",
+  "triangle",
+  "washer",
+  "wheel_caps",
+  "wipers",
+  "ws",
+  "wt",
+  "column_break_oczz",
+  "air_conditioner_co",
+  "antenna_co",
+  "ash_tray_co",
+  "fe_co",
+  "floor_mats_co",
+  "jack_co",
+  "lighter_co",
+  "lights_co",
+  "mulkia_co",
+  "reg_card_co",
+  "spare_tyre_co",
+  "toolkit_co",
+  "triangle_co",
+  "washer_co",
+  "wheel_caps_co",
+  "wipers_co",
+  "ws_co",
+  "wt_co",
+  "column_break_bjid",
+  "vehicle_marking",
+  "other_remarks",
+  "vehicle_received_by",
+  "vehicle_returned_by",
+  "receivers_signature",
+  "amended_from"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_5tqc",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supplier Rental Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "naming_series",
+   "fieldtype": "Select",
+   "label": "Naming Series",
+   "options": "CC-.YYYY.-"
+  },
+  {
+   "fieldname": "supplier",
+   "fieldtype": "Link",
+   "label": "Supplier",
+   "options": "Supplier"
+  },
+  {
+   "fieldname": "check_in_date",
+   "fieldtype": "Date",
+   "label": "Check In date"
+  },
+  {
+   "fieldname": "check_out_date",
+   "fieldtype": "Date",
+   "label": "Check Out date"
+  },
+  {
+   "fieldname": "declaration",
+   "fieldtype": "Link",
+   "label": "Declaration",
+   "options": "Terms and Conditions"
+  },
+  {
+   "fetch_from": "declaration.terms",
+   "fieldname": "text_editor_fluj",
+   "fieldtype": "Text Editor"
+  },
+  {
+   "fieldname": "check_out_kilometers",
+   "fieldtype": "Float",
+   "label": "Check Out Kilometers"
+  },
+  {
+   "fieldname": "check_out_fuel",
+   "fieldtype": "Float",
+   "label": "Check Out Fuel"
+  },
+  {
+   "fieldname": "check_in_kilometers",
+   "fieldtype": "Float",
+   "label": "Check In Kilometers"
+  },
+  {
+   "fieldname": "check_in_fuel",
+   "fieldtype": "Float",
+   "label": "Check In Fuel "
+  },
+  {
+   "fieldname": "column_break_wdjw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "Check In\nCheck Out",
+   "read_only": 1
+  },
+  {
+   "fieldname": "check",
+   "fieldtype": "Select",
+   "label": "Check",
+   "options": "New\nReplacement"
+  },
+  {
+   "fieldname": "cost_center",
+   "fieldtype": "Link",
+   "label": "Cost Center",
+   "options": "Cost Center"
+  },
+  {
+   "fieldname": "contract_type",
+   "fieldtype": "Select",
+   "label": "Contract Type",
+   "options": "Monthly\nLease"
+  },
+  {
+   "fieldname": "contract_start_date",
+   "fieldtype": "Date",
+   "label": "Contract Start Date"
+  },
+  {
+   "fieldname": "contract_end_date",
+   "fieldtype": "Date",
+   "label": "Contract End Date"
+  },
+  {
+   "fieldname": "vehicle",
+   "fieldtype": "Link",
+   "label": "Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fetch_from": "vehicle.license_plate",
+   "fieldname": "plate_number",
+   "fieldtype": "Data",
+   "label": "Plate Number"
+  },
+  {
+   "fetch_from": "vehicle.chassis_no",
+   "fieldname": "chassis_number",
+   "fieldtype": "Data",
+   "label": "Chassis Number"
+  },
+  {
+   "fetch_from": "vehicle.custom_engine_no",
+   "fieldname": "engine_number",
+   "fieldtype": "Data",
+   "label": "Engine Number"
+  },
+  {
+   "fetch_from": "vehicle.color",
+   "fieldname": "color",
+   "fieldtype": "Data",
+   "label": "Color"
+  },
+  {
+   "fetch_from": "vehicle.custom_branding_company_name",
+   "fieldname": "brand",
+   "fieldtype": "Data",
+   "label": "Brand"
+  },
+  {
+   "fetch_from": "vehicle.make",
+   "fieldname": "make_and_model",
+   "fieldtype": "Data",
+   "label": "Make"
+  },
+  {
+   "fetch_from": "vehicle.model",
+   "fieldname": "model",
+   "fieldtype": "Data",
+   "label": "Model"
+  },
+  {
+   "fetch_from": "vehicle.custom_model_year",
+   "fieldname": "model_year",
+   "fieldtype": "Data",
+   "label": "Model year"
+  },
+  {
+   "fieldname": "fuel_level",
+   "fieldtype": "Data",
+   "label": "Fuel Level"
+  },
+  {
+   "fieldname": "odometer_reading",
+   "fieldtype": "Data",
+   "label": "Odometer Reading"
+  },
+  {
+   "fieldname": "kms_per_month__year",
+   "fieldtype": "Data",
+   "label": "Kms per month / year"
+  },
+  {
+   "fieldname": "section_break_jspl",
+   "fieldtype": "Section Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "air_conditioner",
+   "fieldtype": "Check",
+   "label": "Air Conditioner"
+  },
+  {
+   "default": "0",
+   "fieldname": "antenna",
+   "fieldtype": "Check",
+   "label": "Antenna"
+  },
+  {
+   "default": "0",
+   "fieldname": "ash_tray",
+   "fieldtype": "Check",
+   "label": "Ash Tray"
+  },
+  {
+   "default": "0",
+   "fieldname": "fe",
+   "fieldtype": "Check",
+   "label": "FE"
+  },
+  {
+   "default": "0",
+   "fieldname": "floor_mats",
+   "fieldtype": "Check",
+   "label": "Floor Mats"
+  },
+  {
+   "default": "0",
+   "fieldname": "jack",
+   "fieldtype": "Check",
+   "label": "Jack"
+  },
+  {
+   "default": "0",
+   "fieldname": "lighter",
+   "fieldtype": "Check",
+   "label": "Lighter"
+  },
+  {
+   "default": "0",
+   "fieldname": "lights",
+   "fieldtype": "Check",
+   "label": "Lights"
+  },
+  {
+   "default": "0",
+   "fieldname": "mulkia",
+   "fieldtype": "Check",
+   "label": "Mulkia"
+  },
+  {
+   "default": "0",
+   "fieldname": "reg_card",
+   "fieldtype": "Check",
+   "label": "Reg Card"
+  },
+  {
+   "default": "0",
+   "fieldname": "spare_tyre",
+   "fieldtype": "Check",
+   "label": "Spare Tyre"
+  },
+  {
+   "default": "0",
+   "fieldname": "toolkit",
+   "fieldtype": "Check",
+   "label": "ToolKit"
+  },
+  {
+   "default": "0",
+   "fieldname": "triangle",
+   "fieldtype": "Check",
+   "label": "Triangle"
+  },
+  {
+   "default": "0",
+   "fieldname": "washer",
+   "fieldtype": "Check",
+   "label": "Washer"
+  },
+  {
+   "default": "0",
+   "fieldname": "wheel_caps",
+   "fieldtype": "Check",
+   "label": "Wheel Caps"
+  },
+  {
+   "default": "0",
+   "fieldname": "wipers",
+   "fieldtype": "Check",
+   "label": "Wipers"
+  },
+  {
+   "default": "0",
+   "fieldname": "ws",
+   "fieldtype": "Check",
+   "label": "WS"
+  },
+  {
+   "default": "0",
+   "fieldname": "wt",
+   "fieldtype": "Check",
+   "label": "WT"
+  },
+  {
+   "fieldname": "column_break_bjid",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "vehicle_marking",
+   "fieldtype": "Table",
+   "label": "Vehicle Marking",
+   "options": "Vehicle Marking"
+  },
+  {
+   "fieldname": "other_remarks",
+   "fieldtype": "Small Text",
+   "label": "Other Remarks"
+  },
+  {
+   "fieldname": "vehicle_received_by",
+   "fieldtype": "Link",
+   "label": "Vehicle Received By",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "vehicle_returned_by",
+   "fieldtype": "Link",
+   "label": "Vehicle Returned By",
+   "options": "Employee"
+  },
+  {
+   "fieldname": "receivers_signature",
+   "fieldtype": "Signature",
+   "label": "Receiver's Signature"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supplier Rental Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "air_conditioner_co",
+   "fieldtype": "Check",
+   "label": "Air Conditioner "
+  },
+  {
+   "fieldname": "column_break_oczz",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "antenna_co",
+   "fieldtype": "Check",
+   "label": "Antenna"
+  },
+  {
+   "default": "0",
+   "fieldname": "ash_tray_co",
+   "fieldtype": "Check",
+   "label": "Ash Tray"
+  },
+  {
+   "default": "0",
+   "fieldname": "fe_co",
+   "fieldtype": "Check",
+   "label": "FE"
+  },
+  {
+   "default": "0",
+   "fieldname": "floor_mats_co",
+   "fieldtype": "Check",
+   "label": "Floor Mats"
+  },
+  {
+   "default": "0",
+   "fieldname": "jack_co",
+   "fieldtype": "Check",
+   "label": "Jack"
+  },
+  {
+   "default": "0",
+   "fieldname": "lighter_co",
+   "fieldtype": "Check",
+   "label": "Lighter"
+  },
+  {
+   "default": "0",
+   "fieldname": "reg_card_co",
+   "fieldtype": "Check",
+   "label": "Reg Card"
+  },
+  {
+   "default": "0",
+   "fieldname": "lights_co",
+   "fieldtype": "Check",
+   "label": "Lights"
+  },
+  {
+   "default": "0",
+   "fieldname": "mulkia_co",
+   "fieldtype": "Check",
+   "label": "Mulkia"
+  },
+  {
+   "default": "0",
+   "fieldname": "spare_tyre_co",
+   "fieldtype": "Check",
+   "label": "Spare Tyre"
+  },
+  {
+   "default": "0",
+   "fieldname": "toolkit_co",
+   "fieldtype": "Check",
+   "label": "ToolKit"
+  },
+  {
+   "default": "0",
+   "fieldname": "triangle_co",
+   "fieldtype": "Check",
+   "label": "Triangle"
+  },
+  {
+   "default": "0",
+   "fieldname": "wheel_caps_co",
+   "fieldtype": "Check",
+   "label": "Wheel Caps"
+  },
+  {
+   "default": "0",
+   "fieldname": "wipers_co",
+   "fieldtype": "Check",
+   "label": "Wipers"
+  },
+  {
+   "default": "0",
+   "fieldname": "ws_co",
+   "fieldtype": "Check",
+   "label": "WS"
+  },
+  {
+   "default": "0",
+   "fieldname": "wt_co",
+   "fieldtype": "Check",
+   "label": "WT "
+  },
+  {
+   "default": "0",
+   "fieldname": "washer_co",
+   "fieldtype": "Check",
+   "label": "Washer"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "is_submittable": 1,
+ "links": [],
+ "modified": "2025-03-17 10:59:25.823013",
+ "modified_by": "Administrator",
+ "module": "DAB App",
+ "name": "Supplier Rental Contract",
+ "naming_rule": "By \"Naming Series\" field",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "submit": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
