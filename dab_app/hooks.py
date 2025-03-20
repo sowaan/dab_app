@@ -24,6 +24,13 @@ app_license = "mit"
 # Includes in <head>
 # ------------------
 
+fixtures = [
+	{
+		"doctype":"Custom Field",
+		"filters":[["module", "=", "DAB App"]]
+	}
+]
+
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dab_app/css/dab_app.css"
 # app_include_js = "/assets/dab_app/js/dab_app.js"
@@ -129,9 +136,9 @@ app_license = "mit"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-# 	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Payroll Entry": "dab_app.overrides.dab_payroll_entry.DABPayrollEntry"
+}
 
 # Document Events
 # ---------------
