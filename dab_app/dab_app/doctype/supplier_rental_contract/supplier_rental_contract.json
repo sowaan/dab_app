@@ -9,8 +9,14 @@
   "section_break_5tqc",
   "naming_series",
   "supplier",
+  "supplier_name",
+  "purchase_order",
+  "company",
+  "rate",
   "check_in_date",
   "check_out_date",
+  "reason",
+  "days",
   "declaration",
   "text_editor_fluj",
   "check_out_kilometers",
@@ -18,8 +24,13 @@
   "check_in_kilometers",
   "check_in_fuel",
   "column_break_wdjw",
+  "contract_status",
   "status",
   "check",
+  "replacement_vehicle",
+  "replacement_vehicle_plate_number",
+  "replacement_vehicle_make",
+  "replacement_vehicle_model",
   "cost_center",
   "contract_type",
   "contract_start_date",
@@ -55,6 +66,13 @@
   "wipers",
   "ws",
   "wt",
+  "column_break_bjid",
+  "vehicle_marking",
+  "other_remarks",
+  "vehicle_received_by",
+  "receivers_signature",
+  "amended_from",
+  "section_break_jmrr",
   "column_break_oczz",
   "air_conditioner_co",
   "antenna_co",
@@ -74,13 +92,10 @@
   "wipers_co",
   "ws_co",
   "wt_co",
-  "column_break_bjid",
-  "vehicle_marking",
-  "other_remarks",
-  "vehicle_received_by",
-  "vehicle_returned_by",
-  "receivers_signature",
-  "amended_from"
+  "column_break_vnev",
+  "vehicle_marking_check_out",
+  "other_remarks_check_out",
+  "vehicle_returned_by"
  ],
  "fields": [
   {
@@ -106,8 +121,10 @@
   {
    "fieldname": "supplier",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Supplier",
-   "options": "Supplier"
+   "options": "Supplier",
+   "reqd": 1
   },
   {
    "fieldname": "check_in_date",
@@ -115,6 +132,7 @@
    "label": "Check In date"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "check_out_date",
    "fieldtype": "Date",
    "label": "Check Out date"
@@ -131,11 +149,13 @@
    "fieldtype": "Text Editor"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "check_out_kilometers",
    "fieldtype": "Float",
    "label": "Check Out Kilometers"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "check_out_fuel",
    "fieldtype": "Float",
    "label": "Check Out Fuel"
@@ -155,6 +175,7 @@
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "status",
    "fieldtype": "Select",
    "label": "Status",
@@ -170,8 +191,10 @@
   {
    "fieldname": "cost_center",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Cost Center",
-   "options": "Cost Center"
+   "options": "Cost Center",
+   "reqd": 1
   },
   {
    "fieldname": "contract_type",
@@ -192,8 +215,10 @@
   {
    "fieldname": "vehicle",
    "fieldtype": "Link",
+   "in_list_view": 1,
    "label": "Vehicle",
-   "options": "Vehicle"
+   "options": "Vehicle",
+   "reqd": 1
   },
   {
    "fetch_from": "vehicle.license_plate",
@@ -260,7 +285,8 @@
   },
   {
    "fieldname": "section_break_jspl",
-   "fieldtype": "Section Break"
+   "fieldtype": "Section Break",
+   "label": "Check In "
   },
   {
    "default": "0",
@@ -377,13 +403,13 @@
   {
    "fieldname": "vehicle_marking",
    "fieldtype": "Table",
-   "label": "Vehicle Marking",
+   "label": "Vehicle Marking Check In",
    "options": "Vehicle Marking"
   },
   {
    "fieldname": "other_remarks",
    "fieldtype": "Small Text",
-   "label": "Other Remarks"
+   "label": "Other Remarks Check In"
   },
   {
    "fieldname": "vehicle_received_by",
@@ -392,10 +418,12 @@
    "options": "Employee"
   },
   {
+   "allow_on_submit": 1,
    "fieldname": "vehicle_returned_by",
    "fieldtype": "Link",
    "label": "Vehicle Returned By",
-   "options": "Employee"
+   "options": "Employee",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
    "fieldname": "receivers_signature",
@@ -413,122 +441,261 @@
    "search_index": 1
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "air_conditioner_co",
    "fieldtype": "Check",
-   "label": "Air Conditioner "
+   "label": "Air Conditioner ",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
    "fieldname": "column_break_oczz",
    "fieldtype": "Column Break"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "antenna_co",
    "fieldtype": "Check",
-   "label": "Antenna"
+   "label": "Antenna",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "ash_tray_co",
    "fieldtype": "Check",
-   "label": "Ash Tray"
+   "label": "Ash Tray",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "fe_co",
    "fieldtype": "Check",
-   "label": "FE"
+   "label": "FE",
+   "read_only_depends_on": "eval:doc.contract_status==\"Closed\";"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "floor_mats_co",
    "fieldtype": "Check",
-   "label": "Floor Mats"
+   "label": "Floor Mats",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "jack_co",
    "fieldtype": "Check",
-   "label": "Jack"
+   "label": "Jack",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "lighter_co",
    "fieldtype": "Check",
-   "label": "Lighter"
+   "label": "Lighter",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "reg_card_co",
    "fieldtype": "Check",
-   "label": "Reg Card"
+   "label": "Reg Card",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "lights_co",
    "fieldtype": "Check",
-   "label": "Lights"
+   "label": "Lights",
+   "read_only_depends_on": "eval:doc.contract_status==\"Closed\";"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "mulkia_co",
    "fieldtype": "Check",
-   "label": "Mulkia"
+   "label": "Mulkia",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "spare_tyre_co",
    "fieldtype": "Check",
-   "label": "Spare Tyre"
+   "label": "Spare Tyre",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "toolkit_co",
    "fieldtype": "Check",
-   "label": "ToolKit"
+   "label": "ToolKit",
+   "read_only_depends_on": "eval:doc.contract_status==\"Closed\";"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "triangle_co",
    "fieldtype": "Check",
-   "label": "Triangle"
+   "label": "Triangle",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "wheel_caps_co",
    "fieldtype": "Check",
-   "label": "Wheel Caps"
+   "label": "Wheel Caps",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "wipers_co",
    "fieldtype": "Check",
-   "label": "Wipers"
+   "label": "Wipers",
+   "read_only_depends_on": "eval:doc.contract_status==\"Closed\";"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "ws_co",
    "fieldtype": "Check",
-   "label": "WS"
+   "label": "WS",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "wt_co",
    "fieldtype": "Check",
-   "label": "WT "
+   "label": "WT ",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
   },
   {
+   "allow_on_submit": 1,
    "default": "0",
    "fieldname": "washer_co",
    "fieldtype": "Check",
-   "label": "Washer"
+   "label": "Washer",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "days",
+   "fieldtype": "Float",
+   "label": "Number of Days",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "section_break_jmrr",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Check Out"
+  },
+  {
+   "fieldname": "column_break_vnev",
+   "fieldtype": "Column Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "vehicle_marking_check_out",
+   "fieldtype": "Table",
+   "label": "Vehicle Marking Check Out",
+   "options": "Vehicle Marking",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "other_remarks_check_out",
+   "fieldtype": "Small Text",
+   "label": "Other Remarks Check Out",
+   "read_only_depends_on": "eval: doc.contract_status == \"Closed\" ;"
+  },
+  {
+   "fieldname": "reason",
+   "fieldtype": "Link",
+   "label": "Reason",
+   "options": "Check out Reasons"
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Float",
+   "label": "Rate",
+   "options": "Currency"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "contract_status",
+   "fieldtype": "Select",
+   "label": "Contract Status",
+   "options": "Open\nClosed"
+  },
+  {
+   "fieldname": "replacement_vehicle",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "in_list_view": 1,
+   "label": "Replacement Vehicle",
+   "options": "Vehicle"
+  },
+  {
+   "fetch_from": "replacement_vehicle.license_plate",
+   "fieldname": "replacement_vehicle_plate_number",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Replacement Vehicle Plate Number"
+  },
+  {
+   "fetch_from": "replacement_vehicle.make",
+   "fieldname": "replacement_vehicle_make",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Replacement Vehicle Make"
+  },
+  {
+   "fetch_from": "replacement_vehicle.model",
+   "fieldname": "replacement_vehicle_model",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Replacement Vehicle Model"
+  },
+  {
+   "fieldname": "purchase_order",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Purchase Order",
+   "options": "Purchase Order"
+  },
+  {
+   "fetch_from": "supplier.supplier_name",
+   "fieldname": "supplier_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Supplier Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-17 10:59:25.823013",
+ "modified": "2025-04-21 16:11:50.874901",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Contract",
