@@ -152,8 +152,23 @@ override_doctype_class = {
 # 	}
 # }
 
+doc_events = {
+    "Purchase Invoice": {
+        "on_trash": "dab_app.api.supplier_rental.remove_invoicing_history_on_invoice_delete"
+    }
+}
+
+
+
 # Scheduled Tasks
 # ---------------
+
+scheduler_events = {
+    "monthly": [
+        "dab_app.api.supplier_rental.generate_monthly_invoices"
+    ]
+}
+
 
 # scheduler_events = {
 # 	"all": [

@@ -5,6 +5,8 @@ import frappe
 from frappe.model.document import Document
 
 
+
+
 class SupplierRentalContract(Document):
 	def validate(self):
 		# Server Script for Supplier Rental Contract - Validate
@@ -21,3 +23,5 @@ class SupplierRentalContract(Document):
 			if existing:
 				frappe.throw(f"Vehicle {doc.vehicle} is already in use (Checked In) in another contract.")
 
+
+	

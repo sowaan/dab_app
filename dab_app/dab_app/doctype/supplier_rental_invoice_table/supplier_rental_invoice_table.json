@@ -11,7 +11,8 @@
   "vehicle",
   "number_of_days",
   "rate",
-  "amount"
+  "amount",
+  "check_out_date"
  ],
  "fields": [
   {
@@ -46,12 +47,17 @@
    "fieldname": "amount",
    "fieldtype": "Currency",
    "label": "Amount"
+  },
+  {
+   "fieldname": "check_out_date",
+   "fieldtype": "Date",
+   "label": "Check out Date"
   }
  ],
  "index_web_pages_for_search": 1,
  "istable": 1,
  "links": [],
- "modified": "2025-04-18 10:13:00.366497",
+ "modified": "2025-05-02 16:09:26.708322",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Invoice Table",

@@ -11,12 +11,13 @@
   "supplier",
   "supplier_name",
   "purchase_order",
-  "company",
+  "item",
   "rate",
   "check_in_date",
   "check_out_date",
   "reason",
   "days",
+  "invoiced_days",
   "declaration",
   "text_editor_fluj",
   "check_out_kilometers",
@@ -24,6 +25,7 @@
   "check_in_kilometers",
   "check_in_fuel",
   "column_break_wdjw",
+  "purchase_invoiced",
   "contract_status",
   "status",
   "check",
@@ -47,6 +49,7 @@
   "fuel_level",
   "odometer_reading",
   "kms_per_month__year",
+  "kilometers",
   "section_break_jspl",
   "air_conditioner",
   "antenna",
@@ -95,7 +98,10 @@
   "column_break_vnev",
   "vehicle_marking_check_out",
   "other_remarks_check_out",
-  "vehicle_returned_by"
+  "vehicle_returned_by",
+  "invoice_tab",
+  "section_break_dnbu",
+  "invoicing_history"
  ],
  "fields": [
   {
@@ -141,7 +147,8 @@
    "fieldname": "declaration",
    "fieldtype": "Link",
    "label": "Declaration",
-   "options": "Terms and Conditions"
+   "options": "Terms and Conditions",
+   "reqd": 1
   },
   {
    "fetch_from": "declaration.terms",
@@ -280,8 +287,9 @@
   },
   {
    "fieldname": "kms_per_month__year",
-   "fieldtype": "Data",
-   "label": "Kms per month / year"
+   "fieldtype": "Select",
+   "label": "Kilometers per",
+   "options": "Month\nYear"
   },
   {
    "fieldname": "section_break_jspl",
@@ -404,7 +412,8 @@
    "fieldname": "vehicle_marking",
    "fieldtype": "Table",
    "label": "Vehicle Marking Check In",
-   "options": "Vehicle Marking"
+   "options": "Vehicle Marking",
+   "reqd": 1
   },
   {
    "fieldname": "other_remarks",
@@ -631,7 +640,8 @@
    "fieldname": "rate",
    "fieldtype": "Float",
    "label": "Rate",
-   "options": "Currency"
+   "options": "Currency",
+   "reqd": 1
   },
   {
    "allow_on_submit": 1,
@@ -674,7 +684,8 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Purchase Order",
-   "options": "Purchase Order"
+   "options": "Purchase Order",
+   "reqd": 1
   },
   {
    "fetch_from": "supplier.supplier_name",
@@ -685,17 +696,57 @@
    "read_only": 1
   },
   {
-   "fieldname": "company",
+   "allow_on_submit": 1,
+   "fieldname": "invoice_tab",
+   "fieldtype": "Tab Break",
+   "label": "Invoice"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "invoicing_history",
+   "fieldtype": "Table",
+   "label": "Invoicing History",
+   "options": "Supplier Rental Invoice Log"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "section_break_dnbu",
+   "fieldtype": "Section Break"
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "item",
    "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Company",
-   "options": "Company"
+   "label": "Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "fieldname": "invoiced_days",
+   "fieldtype": "Float",
+   "label": "Invoiced Days",
+   "read_only": 1
+  },
+  {
+   "allow_on_submit": 1,
+   "default": "0",
+   "fieldname": "purchase_invoiced",
+   "fieldtype": "Check",
+   "label": "Purchase Invoiced",
+   "read_only": 1
+  },
+  {
+   "fieldname": "kilometers",
+   "fieldtype": "Float",
+   "label": "Kilometers"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-21 16:11:50.874901",
+ "modified": "2025-05-05 15:04:16.119246",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Contract",

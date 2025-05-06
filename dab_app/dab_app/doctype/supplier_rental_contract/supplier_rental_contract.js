@@ -11,8 +11,20 @@ frappe.ui.form.on('Supplier Rental Contract', {
     
     
     refresh: function(frm) {
+
+        // if (frm.doc.status === 'Check In' && frm.doc.docstatus === 1) {
+        //     frm.add_custom_button('Generate Monthly Invoice', function() {
+        //         frappe.call({
+        //             method: 'dab_app.api.supplier_rental.generate_monthly_invoice',
+        //             args: {
+        //                 contract_name: frm.doc.name
+        //             },
+                    
+        //         });
+        //     });
+        // }
         // Calculate days between check-in and check-out
-        calculateDaysDifference(frm);
+        
         
         // Remove buttons to avoid duplicates
         frm.remove_custom_button('Check In');
@@ -30,6 +42,7 @@ frappe.ui.form.on('Supplier Rental Contract', {
         // Add Check Out button if applicable
         addCheckOutButton(frm);
         
+
 
         setupPurchaseOrderFilter(frm);
         // Make all fields read-only if contract is closed
@@ -94,6 +107,9 @@ function setupVehicleFilter(frm) {
     }));
 }
 
+
+
+
 // Toggle visibility of check-out related fields
 function toggleCheckOutFields(frm) {
     const isCheckOut = frm.doc.status === 'Check Out';
@@ -107,11 +123,20 @@ function addCheckOutButton(frm) {
         frm.add_custom_button('Check Out', () => {
             // First make check-in fields read-only
             setCheckInFieldsReadOnly(frm, true);
-            
+
             // Then make check-out fields editable
             setCheckOutFieldsEditable(frm);
-            
-            // Update status to Check Out
+
+            // Get today's date as string (YYYY-MM-DD)
+            const checkOutDateStr = frappe.datetime.now_date();
+
+            // Convert to Date object and extract day of the month (1–31)
+            const dayOfMonth = frappe.datetime.str_to_obj(checkOutDateStr).getDate();
+
+            // Compute new invoiced_days value
+            const updatedInvoicedDays = (frm.doc.invoiced_days || 0) + dayOfMonth;
+
+            // Update status and date fields
             frappe.call({
                 method: 'frappe.client.set_value',
                 args: {
@@ -119,7 +144,9 @@ function addCheckOutButton(frm) {
                     name: frm.doc.name,
                     fieldname: {
                         'status': 'Check Out',
-                        'check_out_date': frappe.datetime.now_datetime()
+                        'check_out_date': checkOutDateStr,
+                        'days': dayOfMonth,
+                        'invoiced_days': updatedInvoicedDays
                     }
                 },
                 callback: function() {
@@ -130,12 +157,17 @@ function addCheckOutButton(frm) {
     }
 }
 
+
+
 // Make all form fields read-only
 function makeAllFieldsReadOnly(frm) {
     frm.fields.forEach(field => {
         frm.set_df_property(field.df.fieldname, 'read_only', 1);
     });
+
+    
 }
+
 
 // Update field states based on current document status
 function updateFieldStates(frm) {
@@ -179,4 +211,9 @@ function setCheckOutFieldsEditable(frm) {
     frm.set_df_property('check_out_kilometers', 'hidden', 0);
     frm.set_df_property('check_out_fuel', 'read_only', 0);
     frm.set_df_property('check_out_fuel', 'hidden', 0);
+}
+
+function removeCustomButtons(frm) {
+    frm.remove_custom_button('Check In');
+    frm.remove_custom_button('Check Out');
 }
