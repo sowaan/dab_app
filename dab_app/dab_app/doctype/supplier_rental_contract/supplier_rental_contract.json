@@ -74,7 +74,6 @@
   "other_remarks",
   "vehicle_received_by",
   "receivers_signature",
-  "amended_from",
   "section_break_jmrr",
   "column_break_oczz",
   "air_conditioner_co",
@@ -107,16 +106,6 @@
   {
    "fieldname": "section_break_5tqc",
    "fieldtype": "Section Break"
-  },
-  {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Supplier Rental Contract",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
   },
   {
    "fieldname": "naming_series",
@@ -440,16 +429,6 @@
    "label": "Receiver's Signature"
   },
   {
-   "fieldname": "amended_from",
-   "fieldtype": "Link",
-   "label": "Amended From",
-   "no_copy": 1,
-   "options": "Supplier Rental Contract",
-   "print_hide": 1,
-   "read_only": 1,
-   "search_index": 1
-  },
-  {
    "allow_on_submit": 1,
    "default": "0",
    "fieldname": "air_conditioner_co",
@@ -746,7 +725,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-05 15:04:16.119246",
+ "modified": "2025-05-08 11:14:00.000604",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Contract",
