@@ -163,11 +163,7 @@ doc_events = {
 # Scheduled Tasks
 # ---------------
 
-scheduler_events = {
-    "monthly": [
-        "dab_app.api.supplier_rental.generate_monthly_invoices"
-    ]
-}
+
 
 
 # scheduler_events = {
