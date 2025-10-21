@@ -15,6 +15,9 @@ from frappe.query_builder.functions import Count
 
 class DABPayrollEntry(PayrollEntry):
     def make_filters(self):
+        #get all selected projects list if selected
+        project_list = [d.projects for d in self.custom_projects] if self.custom_projects else []
+
         filters = frappe._dict(
             company=self.company,
             branch=self.branch,
@@ -24,7 +27,8 @@ class DABPayrollEntry(PayrollEntry):
             currency=self.currency,
             start_date=self.start_date,
             end_date=self.end_date,
-            project=self.custom_project_in_employee,
+            # project=self.custom_project_in_employee,
+            projects=project_list,  # use all selected projects
             payroll_payable_account=self.payroll_payable_account,
             salary_slip_based_on_timesheet=self.salary_slip_based_on_timesheet,
         )
@@ -205,15 +209,19 @@ def get_filtered_employees(
 			(SalaryStructureAssignment.docstatus == 1)
 			& (Employee.status != "Inactive")
 			& (Employee.company == filters.company)
-            & (Employee.custom_project == filters.project)
+            #& (Employee.custom_project == filters.project)
 			& ((Employee.date_of_joining <= filters.end_date) | (Employee.date_of_joining.isnull()))
 			& ((Employee.relieving_date >= filters.start_date) | (Employee.relieving_date.isnull()))
 			& (SalaryStructureAssignment.salary_structure.isin(sal_struct))
 			& (SalaryStructureAssignment.payroll_payable_account == filters.payroll_payable_account)
 			& (filters.end_date >= SalaryStructureAssignment.from_date)
 		)
-	)
+	)   
 
+    # Apply project filter only if provided
+	if filters.get("projects"):
+		query = query.where(Employee.custom_projects.isin(filters.projects))
+          
 	query = set_fields_to_select(query, fields)
 	query = set_searchfield(query, searchfield, search_string, qb_object=Employee)
 	query = set_filter_conditions(query, filters, qb_object=Employee)
