@@ -5,6 +5,7 @@ app_description = "Customizations for Daral Buraq"
 app_email = "info@sowaan.com"
 app_license = "mit"
 
+
 # Apps
 # ------------------
 
@@ -152,13 +153,26 @@ override_doctype_class = {
 # 	}
 # }
 
+# doc_events = {
+#     "*": {  # optional: or you can target specific doctypes
+#         "before_save": "dab_app.api.backdate_permission.validate_back_date_permission"
+#     }
+# }
+
+
 doc_events = {
     "Purchase Invoice": {
-        "on_trash": "dab_app.api.supplier_rental.remove_invoicing_history_on_invoice_delete"
+        "on_trash": "dab_app.api.supplier_rental.remove_invoicing_history_on_invoice_delete",
+        #"before_save": "dab_app.api.backdate_permission.validate_back_date_permission"
+        #"validate": "dab_app.api.backdate_permission.check_back_date_permission"
     }
 }
 
-
+doc_events = {
+    "*": {
+        "validate": "dab_app.api.backdate_permission.check_back_date_permission"
+    }
+}
 
 # Scheduled Tasks
 # ---------------
@@ -259,4 +273,9 @@ doc_events = {
 # default_log_clearing_doctypes = {
 # 	"Logging DocType Name": 30  # days to retain logs
 # }
+
+
+
+
+
 

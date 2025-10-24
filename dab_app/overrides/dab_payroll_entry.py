@@ -13,6 +13,7 @@ from hrms.payroll.doctype.payroll_entry.payroll_entry import (
 from frappe.utils import date_diff
 from frappe.query_builder.functions import Count
 
+
 class DABPayrollEntry(PayrollEntry):
     def make_filters(self):
         #get all selected projects list if selected
