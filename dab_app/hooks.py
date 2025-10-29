@@ -168,11 +168,6 @@ doc_events = {
     }
 }
 
-doc_events = {
-    "*": {
-        "validate": "dab_app.api.backdate_permission.check_back_date_permission"
-    }
-}
 
 # Scheduled Tasks
 # ---------------
