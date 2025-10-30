@@ -221,7 +221,7 @@ def get_filtered_employees(
 
     # Apply project filter only if provided
 	if filters.get("projects"):
-		query = query.where(Employee.custom_projects.isin(filters.projects))
+		query = query.where(Employee.custom_project.isin(filters.projects))
           
 	query = set_fields_to_select(query, fields)
 	query = set_searchfield(query, searchfield, search_string, qb_object=Employee)
