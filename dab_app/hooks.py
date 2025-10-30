@@ -26,11 +26,22 @@ app_license = "mit"
 # ------------------
 
 fixtures = [
-	{
-		"doctype":"Custom Field",
-		"filters":[["module", "=", "DAB App"]]
-	}
+    {
+        "doctype": "Custom Field",
+        "filters": [["module", "=", "DAB App"]]
+    },
+    {
+        "doctype": "DocType",
+        "filters": [["custom", "=", 1], ["module", "=", "DAB App"]]
+    }
 ]
+
+# fixtures = [
+# 	{
+# 		"doctype":"Custom Field",
+# 		"filters":[["module", "=", "DAB App"]]
+# 	}
+# ]
 
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dab_app/css/dab_app.css"
