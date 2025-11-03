@@ -52,7 +52,7 @@ class DABPayrollEntry(PayrollEntry):
                 frappe.bold(self.company),
                 frappe.bold(self.currency),
                 frappe.bold(self.payroll_payable_account),
-                frappe.bold(self.custom_project_in_employee),
+                #frappe.bold(self.custom_project_in_employee),
             )
             if self.branch:
                 error_msg += "<br>" + _("Branch: {0}").format(frappe.bold(self.branch))
