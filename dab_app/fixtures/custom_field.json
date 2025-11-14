@@ -39157,5 +39157,13 @@
   "translatable": 0,
   "unique": 0,
   "width": null
- }
+ },
+ {
+    "fieldname": "custom_rental",
+    "fieldtype": "Check",
+    "label": "Rental",
+    "insert_after": "custom_rental_expiry_date",
+    "reqd": 0,
+    "dt": "Vehicle"
+  }
 ]

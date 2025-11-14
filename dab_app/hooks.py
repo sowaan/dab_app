@@ -25,16 +25,31 @@ app_license = "mit"
 # Includes in <head>
 # ------------------
 
+# fixtures = [
+#     {
+#         "doctype": "Custom Field",
+#         "filters": [["module", "=", "DAB App"]]
+#     },
+#     {
+#         "doctype": "DocType",
+#         "filters": [["custom", "=", 1], ["module", "=", "DAB App"]]
+#     }
+# ]
+
 fixtures = [
     {
         "doctype": "Custom Field",
-        "filters": [["module", "=", "DAB App"]]
+        "filters": [
+            ["name", "in", ["Vehicle-custom_rental"]]
+        ]
     },
     {
         "doctype": "DocType",
         "filters": [["custom", "=", 1], ["module", "=", "DAB App"]]
     }
 ]
+
+
 
 # fixtures = [
 # 	{
