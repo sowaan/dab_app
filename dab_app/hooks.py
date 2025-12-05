@@ -58,6 +58,13 @@ fixtures = [
 # 	}
 # ]
 
+doc_events = {
+    "Purchase Invoice": {
+        "on_cancel": "dab_app.api.purchase_invoice_reset_contract_flag.purchase_invoice_reset_contract_flag",
+        "on_trash": "dab_app.api.purchase_invoice_reset_contract_flag.purchase_invoice_reset_contract_flag"
+    }
+}
+
 # include js, css files in header of desk.html
 # app_include_css = "/assets/dab_app/css/dab_app.css"
 # app_include_js = "/assets/dab_app/js/dab_app.js"

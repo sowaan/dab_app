@@ -3,101 +3,116 @@ from frappe.model.document import Document
 from frappe.utils import getdate, flt, get_last_day, get_first_day, date_diff
 from datetime import datetime
 import calendar
+import json
 
 class SupplierRentalInvoice(Document):
-    def before_save(self):
+    def before_save(self):      
+
         doc = self
         existing_ids = {d.id for d in doc.supplier_rental_invoice_table}
         skipped_contracts = []
-        
-        # Get the first and last day of the selected month/year
-        invoice_month_start = get_first_day(doc.from_date)
-        invoice_month_end = get_last_day(doc.from_date)
-        
-        # Filters for check out contracts
+
+        # User-selected invoice date range
+        invoice_month_start = getdate(doc.from_date)
+        invoice_month_end = getdate(doc.to_date)
+
+        # Fetch all active contracts for this supplier
         filters = {
             "supplier": doc.supplier,
-            "status": "Check Out",
             "docstatus": 1
         }
-        
+
         if doc.vehicle:
             filters["vehicle"] = doc.vehicle
             
-        contracts = frappe.get_all("Supplier Rental Contract",
+        if doc.status:
+            filters["status"] = doc.status
+        
+
+        contracts = frappe.get_all(
+            "Supplier Rental Contract",
             filters=filters,
-            fields=["name", "vehicle", "check_out_date", "rate", "purchase_order", "status","days"]
+            fields=[
+                "name", "vehicle", "check_in_date", "check_out_date",
+                "rate", "purchase_order", "status", "days"
+            ]
         )
+        #frappe.msgprint(f"I'm here")
         
         for c in contracts:
-            check_out_date = getdate(c.check_out_date)
-            
-            # Check if contract's check_out_date falls within the selected month
-            if invoice_month_start <= check_out_date <= invoice_month_end:
-                # Check if this contract is already invoiced for this month
+            check_in_date = getdate(c.check_in_date)
+            check_out_date = getdate(c.check_out_date) if c.check_out_date else None
+
+            # Treat no check-out as still active till invoice end
+            actual_check_out = check_out_date if check_out_date else invoice_month_end
+
+            #frappe.msgprint(f"check_in_date {check_in_date} invoice_month_end {invoice_month_end} invoice_month_start {invoice_month_start}")
+
+            # Include only if contract overlaps the selected invoice period
+            if check_in_date <= invoice_month_end and actual_check_out >= invoice_month_start:
+                
+                # Skip if already invoiced in the same period
                 existing = frappe.db.sql("""
-                    SELECT sri.parent 
+                    SELECT sri.parent
                     FROM `tabSupplier Rental Invoice Table` sri
                     JOIN `tabSupplier Rental Invoice` si ON sri.parent = si.name
-                    WHERE sri.id = %s 
+                    WHERE sri.id = %s
                     AND si.name != %s
                     AND MONTH(si.from_date) = MONTH(%s)
                     AND YEAR(si.from_date) = YEAR(%s)
                 """, (c.name, doc.name, doc.from_date, doc.from_date), as_dict=1)
-                
+
+                frappe.msgprint(f"existing {existing}")
+
                 if existing:
-                    skipped_contracts.append(f"{c.name} (used in {existing[0].parent})")
+                    skipped_contracts.append(f"{c.name} (already invoiced in {existing[0].parent})")
                     continue
-                
+
                 if c.name in existing_ids:
                     continue  # Already in current doc
-                
-                # Calculate days based on check_out_date day of the month
-                # For example, if check_out_date is 15th, then days would be 15
-                # days_in_month = check_out_date.day
-                
-                # Calculate daily rate (monthly rate / 30)
-                year = c.check_out_date.year
-                month = c.check_out_date.month
 
-                # Get the number of days in the month
-                days_in_month = calendar.monthrange(year, month)[1]
+                # Determine number_of_days
+                if c.check_out_date:
+                    number_of_days = c.days  # Use existing value for fully checked-out vehicles
+                else:
+                    # Calculate days for open-ended contract
+                    bill_start = max(check_in_date, invoice_month_start)
+                    bill_end = min(actual_check_out, invoice_month_end)
+                    number_of_days = (bill_end - bill_start).days + 1
 
-                # Calculate daily rate based on actual number of days in the month
-                rate_per_day = flt(c.rate) / days_in_month
+                # Daily rate based on invoice month
+                days_in_invoice_month = calendar.monthrange(invoice_month_start.year, invoice_month_start.month)[1]
+                daily_rate = flt(c.rate / days_in_invoice_month, 2)
 
-                # Calculate total amount based on days and daily rate
-                amount = rate_per_day * c.days
+                # Amount for this contract                
+                amount = flt(daily_rate * number_of_days, 2)
 
+                # Append row to invoice table
                 doc.append("supplier_rental_invoice_table", {
                     "id": c.name,
                     "item": doc.item,
                     "vehicle": c.vehicle,
                     "purchase_order": c.purchase_order,
-                    "number_of_days": c.days,
-                    "rate": rate_per_day,
+                    "number_of_days": number_of_days,
+                    "rate": daily_rate,
                     "status": c.status,
+                    "check_in_date": c.check_in_date,
                     "check_out_date": c.check_out_date,
                     "amount": amount
                 })
-                
-        
+
         # Recalculate totals
-        total_days = 0
-        total_amount = 0
-        for d in doc.supplier_rental_invoice_table:
-            # Amount is the contract rate
-   
-            # Rate per day is calculated by dividing amount by number of days
-            total_days += d.number_of_days
-            total_amount += d.amount  
-        
-        doc.total_days = total_days
-        doc.total_amount = total_amount
-        
-        # Show message if any contracts were skipped due to duplication
+        doc.total_days = sum(d.number_of_days for d in doc.supplier_rental_invoice_table)
+        doc.total_amount = sum(d.amount for d in doc.supplier_rental_invoice_table)
+
+        # Show skipped contracts
         if skipped_contracts:
-            frappe.msgprint("These contracts were already invoiced for this month and skipped: " + ", ".join(skipped_contracts))
+            frappe.msgprint(
+                "These contracts were skipped because already invoiced: " +
+                ", ".join(skipped_contracts)
+            )
+
+
 
 @frappe.whitelist()
 def check_duplicate_contract_ids(ids):
@@ -119,3 +134,51 @@ def check_duplicate_contract_ids(ids):
         }
 
     return {"duplicate": False}
+
+@frappe.whitelist()
+def add_invoicing_history(invoice_name, contract_names, invoice_month):
+    
+    if isinstance(contract_names, str):
+        contract_names = json.loads(contract_names)
+
+    for contract_name in contract_names:
+        if not contract_name:
+            continue
+        try:
+            contract_doc = frappe.get_doc("Supplier Rental Contract", contract_name)
+            # Append new row to child table
+            contract_doc.append("invoicing_history", {
+                "invoice_month": invoice_month,
+                "status": "Invoiced",
+                "purchase_invoice": invoice_name
+            })
+            contract_doc.db_set("purchase_invoiced", 1)  # parent field
+            contract_doc.save(ignore_permissions=True)   # saves child table automatically
+        except Exception as e:
+            frappe.log_error(title=f"Error updating contract {contract_name}", message=str(e))
+
+@frappe.whitelist()
+def check_invoice_exists(contract_names, invoice_month):
+    import json
+
+    if isinstance(contract_names, str):
+        contract_names = json.loads(contract_names)
+
+    duplicate_contracts = []
+
+    for contract_name in contract_names:
+        contract_doc = frappe.get_doc("Supplier Rental Contract", contract_name)
+        for row in contract_doc.invoicing_history:
+            if row.invoice_month == invoice_month:
+                duplicate_contracts.append(contract_name)
+                break
+    
+    #frappe.msgprint(f"exists {len(duplicate_contracts)}")
+
+    return {"exists": len(duplicate_contracts) > 0, "contracts": duplicate_contracts}
+
+    
+  
+
+
+

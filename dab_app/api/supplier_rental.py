@@ -149,9 +149,12 @@ def generate_monthly_invoice(contract_ids=None):
             # Save the invoice
             pi.insert(ignore_permissions=True)
             created_invoices.append(pi.name)
+
+            frappe.msgprint(f"Purchase Invoice Created {pi.name}")
             
             # Now that we have the invoice name, update all associated contracts
             for contract_name in invoice_contracts:
+                frappe.msgprint(f"contract_name {contract_name}")
                 try:
                     doc = frappe.get_doc("Supplier Rental Contract", contract_name)
                     doc.append("invoicing_history", {

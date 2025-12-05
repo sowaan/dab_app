@@ -14,6 +14,7 @@
   "from_date",
   "to_date",
   "vehicle",
+  "status",
   "section_break_sqcf",
   "supplier_rental_invoice_table",
   "section_break_sdfh",
@@ -102,12 +103,23 @@
    "fieldtype": "Data",
    "label": "Supplier Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "options": "\nCheck In\nCheck Out"
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
- "links": [],
- "modified": "2025-05-02 14:52:22.403592",
+ "links": [
+  {
+   "link_doctype": "Purchase Invoice",
+   "link_fieldname": "vehicle"
+  }
+ ],
+ "modified": "2025-12-02 17:56:04.779813",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Invoice",
@@ -127,6 +139,8 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
