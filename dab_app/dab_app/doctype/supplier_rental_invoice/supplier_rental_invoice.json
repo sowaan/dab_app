@@ -7,6 +7,7 @@
  "field_order": [
   "section_break_1koz",
   "amended_from",
+  "custom_company",
   "supplier",
   "supplier_name",
   "item",
@@ -109,6 +110,14 @@
    "fieldtype": "Select",
    "label": "Status",
    "options": "\nCheck In\nCheck Out"
+  },
+  {
+   "fieldname": "custom_company",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Company",
+   "options": "Company",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
@@ -119,7 +128,7 @@
    "link_fieldname": "vehicle"
   }
  ],
- "modified": "2025-12-02 17:56:04.779813",
+ "modified": "2025-12-09 15:03:21.102836",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Invoice",
