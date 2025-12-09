@@ -100,7 +100,8 @@
   "vehicle_returned_by",
   "invoice_tab",
   "section_break_dnbu",
-  "invoicing_history"
+  "invoicing_history",
+  "amended_from"
  ],
  "fields": [
   {
@@ -580,6 +581,7 @@
    "allow_on_submit": 1,
    "fieldname": "days",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Number of Days",
    "read_only": 1
   },
@@ -705,6 +707,7 @@
    "allow_on_submit": 1,
    "fieldname": "invoiced_days",
    "fieldtype": "Float",
+   "hidden": 1,
    "label": "Invoiced Days",
    "read_only": 1
   },
@@ -720,12 +723,22 @@
    "fieldname": "kilometers",
    "fieldtype": "Float",
    "label": "Kilometers"
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Supplier Rental Contract",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-05-08 11:14:00.000604",
+ "modified": "2025-12-08 22:40:39.903540",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Contract",
@@ -746,6 +759,8 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
