@@ -46,7 +46,7 @@ class SupplierRentalInvoice(Document):
             check_out_date = getdate(c.check_out_date) if c.check_out_date else None
             actual_end = check_out_date or invoice_month_end
 
-            frappe.msgprint(f"check_in_date {check_in_date} check_out_date {check_out_date} actual_end {actual_end}")
+            #frappe.msgprint(f"check_in_date {check_in_date} check_out_date {check_out_date} actual_end {actual_end}")
 
             # Skip if contract does not overlap
             if not (check_in_date <= invoice_month_end and actual_end >= invoice_month_start):
@@ -80,7 +80,7 @@ class SupplierRentalInvoice(Document):
             
             number_of_days = (bill_end - bill_start).days + 1
 
-            frappe.msgprint(f"bill_start {bill_start} bill_end {bill_end} number_of_days {number_of_days}")
+            #frappe.msgprint(f"bill_start {bill_start} bill_end {bill_end} number_of_days {number_of_days}")
 
             if number_of_days < 0:
                 frappe.logger().error(f"Contract {c.name}: Negative billing days detected ({number_of_days}). Fixing to 0.")
