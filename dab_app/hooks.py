@@ -46,7 +46,11 @@ fixtures = [
     {
         "doctype": "DocType",
         "filters": [["custom", "=", 1], ["module", "=", "DAB App"]]
-    }
+    },
+    {
+		"doctype":"Custom Field",
+		"filters":[["module", "=", "DAB App"]]
+	}
 ]
 
 
@@ -62,7 +66,14 @@ doc_events = {
     "Purchase Invoice": {
         "on_cancel": "dab_app.api.purchase_invoice_reset_contract_flag.purchase_invoice_reset_contract_flag",
         "on_trash": "dab_app.api.purchase_invoice_reset_contract_flag.purchase_invoice_reset_contract_flag"
+    },
+    "Payment Entry": {
+        "validate": "dab_app.overrides.payment_entry.validate"
     }
+}
+
+doctype_js = {
+    "Payment Entry": "public/js/payment_entry.js"
 }
 
 # include js, css files in header of desk.html
