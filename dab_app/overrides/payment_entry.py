@@ -25,7 +25,7 @@ def validate(doc, method):
 
     missing = []
 
-    if not doc.cheque_book:
+    if not doc.custom_cheque_book:
         missing.append(_("Cheque Book"))
 
     if not doc.custom_cheque_no:
