@@ -12,7 +12,7 @@
   "supplier_name",
   "item",
   "column_break_vdhy",
-  "custom_cost_center",
+  "cost_center",
   "from_date",
   "to_date",
   "vehicle",
@@ -121,7 +121,7 @@
    "reqd": 1
   },
   {
-   "fieldname": "custom_cost_center",
+   "fieldname": "cost_center",
    "fieldtype": "Link",
    "label": "Cost Center",
    "options": "Cost Center",
@@ -136,7 +136,7 @@
    "link_fieldname": "vehicle"
   }
  ],
- "modified": "2025-12-10 08:58:16.209289",
+ "modified": "2025-12-29 13:52:03.874869",
  "modified_by": "Administrator",
  "module": "DAB App",
  "name": "Supplier Rental Invoice",
