@@ -37,7 +37,7 @@ company: function(frm) {
 },
 
 refresh: function(frm) {
-    // --- Auto-set custom_company and custom_cost_center ---
+    // --- Auto-set custom_company and cost_center ---
     if (frm.doc.supplier_rental_contract) {
         frappe.db.get_value(
             'Supplier Rental Contract',
@@ -48,7 +48,7 @@ refresh: function(frm) {
                 if (!frm.doc.custom_company && r.message.company) {
                     frm.set_value('custom_company', r.message.company);
                 }
-                if (!frm.doc.custom_cost_center && r.message.cost_center) {
+                if (!frm.doc.cost_center && r.message.cost_center) {
                     frm.set_value('cost_center', r.message.cost_center);
                 }
             }

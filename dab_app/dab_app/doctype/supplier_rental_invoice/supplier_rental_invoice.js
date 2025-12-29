@@ -1,8 +1,8 @@
 /* ---------------- Supplier Rental Invoice ---------------- */
 frappe.ui.form.on('Supplier Rental Invoice', {
     onload: function(frm) {
-        // Filter custom_cost_center based on selected custom_company
-        frm.set_query("custom_cost_center", () => {
+        // Filter cost_center based on selected custom_company
+        frm.set_query("cost_center", () => {
             const company = frm.doc.custom_company;
             if (company) {
                 return { filters: { company: company, is_group: 0 } };
@@ -16,8 +16,8 @@ frappe.ui.form.on('Supplier Rental Invoice', {
                 frm.doc.supplier_rental_contract,
                 'cost_center'
             ).then(r => {
-                if (r.message && r.message.cost_center && !frm.doc.custom_cost_center) {
-                    frm.set_value('custom_cost_center', r.message.cost_center);
+                if (r.message && r.message.cost_center && !frm.doc.cost_center) {
+                    frm.set_value('cost_center', r.message.cost_center);
                 }
             });
         }
@@ -86,7 +86,7 @@ frappe.ui.form.on('Supplier Rental Invoice', {
 // Function to create the Purchase Invoice
 function create_purchase_invoice(frm, company) {
     const supplier = frm.doc.supplier;
-    const selected_cost_center = frm.doc.custom_cost_center;
+    const selected_cost_center = frm.doc.cost_center;
 
     frappe.db.get_list("Department", {
         filters: { company: company },
