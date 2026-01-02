@@ -107,3 +107,21 @@ function generate_cheque_no(frm) {
         }
     });
 }
+
+frappe.ui.form.on('Payment Entry', {
+    setup(frm) {
+        frm.set_query("custom_cheque_book", () => {
+            return {
+                filters: {
+                    company: frm.doc.company
+                }
+            };
+        });
+    },
+
+    company(frm) {
+        // Clear cheque book if company changes
+        frm.set_value("custom_cheque_book", null);
+        frm.set_value("custom_cheque_no", null);
+    }
+});
