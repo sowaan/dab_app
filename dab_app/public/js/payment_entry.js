@@ -108,6 +108,10 @@ function generate_cheque_no(frm) {
     });
 }
 
+/* ============================================================
+   Filtering Cheque Books by Selected Company
+   ============================================================ */
+   
 frappe.ui.form.on('Payment Entry', {
     setup(frm) {
         frm.set_query("custom_cheque_book", () => {
