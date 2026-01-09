@@ -24,64 +24,63 @@ frappe.ui.form.on('Supplier Rental Invoice', {
     },
 
     refresh: function(frm) {
-        if (frm.doc.docstatus === 1) {
-            frm.add_custom_button('Generate Invoice', function() {
+    console.log(frm.doc.docstatus)
+    if (frm.doc.docstatus !== 1) return;
 
-                if (!frm.doc.supplier_rental_invoice_table.length) {
-                    frappe.msgprint('No data in the table to generate invoice.');
+    frm.clear_custom_buttons(); // 🔥 VERY IMPORTANT
+
+    frappe.call({
+        method: "dab_app.dab_app.doctype.supplier_rental_invoice.supplier_rental_invoice.is_already_invoiced",
+        args: {
+            supplier_rental_invoice: frm.doc.name
+        },
+        callback: function(r) {
+            if (!r.message) {
+                // ✅ Not invoiced → show button
+                add_generate_invoice_button(frm);
+            }
+        }
+    });
+
+    setupVehicleFilter(frm);
+}
+
+});
+
+function add_generate_invoice_button(frm) {
+    frm.add_custom_button('Generate Invoice', function() {
+
+        if (!frm.doc.supplier_rental_invoice_table.length) {
+            frappe.msgprint('No data in the table to generate invoice.');
+            return;
+        }
+
+        const contract_names = frm.doc.supplier_rental_invoice_table.map(row => row.id);
+        const invoice_month = frappe.datetime.str_to_user(
+            frappe.datetime.month_start(frm.doc.to_date)
+        );
+
+        frappe.call({
+            method: "dab_app.dab_app.doctype.supplier_rental_invoice.supplier_rental_invoice.check_invoice_exists",
+            args: {
+                contract_names: contract_names,
+                invoice_month: invoice_month
+            },
+            callback: function(r) {
+                if (r.message && r.message.exists) {
+                    frappe.msgprint({
+                        message: `🚫 Purchase Invoice already exists for <b>${invoice_month}</b>.`,
+                        title: "Duplicate Invoice Detected",
+                        indicator: "red"
+                    });
                     return;
                 }
 
-                // --------- 🚫 DUPLICATE INVOICE CHECK ---------
-                const contract_names = frm.doc.supplier_rental_invoice_table.map(row => row.id);
-                const invoice_month = frappe.datetime.str_to_user(
-                    frappe.datetime.month_start(frappe.datetime.get_today())
-                );
-
-                frappe.call({
-                    method: "dab_app.dab_app.doctype.supplier_rental_invoice.supplier_rental_invoice.check_invoice_exists",
-                    args: {
-                        contract_names: contract_names,
-                        invoice_month: invoice_month
-                    },
-                    callback: function(r) {
-                        if (r.message && r.message.exists) {
-                            frappe.msgprint({
-                                message: `🚫 Purchase Invoice already exists for <b>${invoice_month}</b>. Duplicate invoices are not allowed.`,
-                                title: "Duplicate Invoice Detected",
-                                indicator: "red"
-                            });
-                            return; // Stop further processing
-                        }
-
-                        // No duplicate → continue invoice creation
-                        let company = frm.doc.custom_company;
-
-                        if (!company && frm.doc.supplier_rental_contract) {
-                            frappe.db.get_value(
-                                "Supplier Rental Contract",
-                                frm.doc.supplier_rental_contract,
-                                "company",
-                                function(res) {
-                                    if (res && res.company) {
-                                        company = res.company;
-                                        create_purchase_invoice(frm, company);
-                                    } else {
-                                        frappe.msgprint("No company found in linked contract. Please select a company.");
-                                    }
-                                }
-                            );
-                        } else {
-                            create_purchase_invoice(frm, company);
-                        }
-                    }
-                });
-            });
-        }
-
-        setupVehicleFilter(frm);
-    }
-});
+                create_purchase_invoice(frm, frm.doc.custom_company);
+            }
+        });
+    });
+}
 
 // Function to create the Purchase Invoice
 function create_purchase_invoice(frm, company) {
@@ -130,7 +129,10 @@ function insert_purchase_invoice(frm, supplier, company, department, cost_center
                 department: department,
                 cost_center: cost_center,
                 bill_no: "AUTO-" + Date.now(),
-                bill_date: frappe.datetime.get_today(),
+                bill_date: frm.doc.to_date,
+                set_posting_time: 1,
+                posting_date: frm.doc.to_date,
+                supplier_rental_invoice: frm.doc.name,
                 remarks: "Auto-generated invoice",
                 custom_invoice_remarks: "Auto-generated",
                 items: frm.doc.supplier_rental_invoice_table.map(row => ({
@@ -148,6 +150,16 @@ function insert_purchase_invoice(frm, supplier, company, department, cost_center
             if (!r.exc) {
                 const pi_name = r.message.name;
                 const contract_names = frm.doc.supplier_rental_invoice_table.map(row => row.id);
+               
+                
+                frm.clear_custom_buttons(); // immediate UX feedback
+
+                // OPTIONAL: delay reload slightly to avoid async race
+                setTimeout(() => {
+                    frm.reload_doc();
+                }, 500);
+            
+           // 🔥 syncs server state
 
                 // Mark contracts as invoiced
                 contract_names.forEach(id => {
@@ -170,11 +182,10 @@ function insert_purchase_invoice(frm, supplier, company, department, cost_center
                     args: {
                         invoice_name: pi_name,
                         contract_names: contract_names,
-                        invoice_month: frappe.datetime.str_to_user(
-                            frappe.datetime.month_start(frappe.datetime.get_today())
-                        )
+                        invoice_month: frm.doc.to_date                                                
                     },
                     callback: function() {
+                        frm.clear_custom_buttons();
                         frappe.msgprint("Invoicing History Inserted Successfully!");
                     }
                 });

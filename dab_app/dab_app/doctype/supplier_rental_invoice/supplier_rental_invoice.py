@@ -147,6 +147,12 @@ def check_duplicate_contract_ids(ids):
 @frappe.whitelist()
 def add_invoicing_history(invoice_name, contract_names, invoice_month):
     
+    frappe.log_error(
+    title="INVOICE MONTH DEBUG",
+    message=f"invoice_month received = {invoice_month}"
+)
+
+
     if isinstance(contract_names, str):
         contract_names = json.loads(contract_names)
 
@@ -186,8 +192,28 @@ def check_invoice_exists(contract_names, invoice_month):
 
     return {"exists": len(duplicate_contracts) > 0, "contracts": duplicate_contracts}
 
-    
-  
+@frappe.whitelist()
+def has_active_purchase_invoice(supplier_rental_invoice):
+    return frappe.db.exists(
+        "Purchase Invoice",
+        {
+            "supplier_rental_invoice": supplier_rental_invoice,
+            "docstatus": 1  # Only Submitted
+        }
+    )  
+
+
+@frappe.whitelist()
+def is_already_invoiced(supplier_rental_invoice):
+    return frappe.db.exists(
+        "Purchase Invoice",
+        {
+            "supplier_rental_invoice": supplier_rental_invoice,
+            "docstatus": ["!=", 2]
+        }
+    )
+
+
 
 
 
