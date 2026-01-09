@@ -47,6 +47,34 @@ frappe.ui.form.on('Supplier Rental Invoice', {
 
 });
 
+frappe.ui.form.on("Supplier Rental Invoice", {
+    supplier_rental_invoice_table_add(frm, cdt, cdn) {
+        const row = locals[cdt][cdn];
+
+        if (!row.supplier_rental_contract || !frm.doc.custom_company) return;
+
+        frappe.db.get_value(
+            "Supplier Rental Contract",
+            row.supplier_rental_contract,
+            "custom_company"
+        ).then(r => {
+            if (r.message.custom_company !== frm.doc.custom_company) {
+                frappe.msgprint({
+                    title: "Company Mismatch",
+                    indicator: "red",
+                    message: `
+                        Contract belongs to <b>${r.message.custom_company}</b><br>
+                        Invoice company is <b>${frm.doc.custom_company}</b>
+                    `
+                });
+
+                // optional: auto-clear invalid selection
+                frappe.model.set_value(cdt, cdn, "supplier_rental_contract", null);
+            }
+        });
+    }
+});
+
 function add_generate_invoice_button(frm) {
     frm.add_custom_button('Generate Invoice', function() {
 

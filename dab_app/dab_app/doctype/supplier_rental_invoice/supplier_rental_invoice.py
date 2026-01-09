@@ -6,7 +6,36 @@ import calendar
 import json
 
 class SupplierRentalInvoice(Document):
-    def before_save(self):
+    def validate(self):
+        self.validate_contract_company_match()  
+        
+
+    def validate_contract_company_match(self):
+
+        if not self.custom_company:
+            frappe.throw("Please select Company in Supplier Rental Invoice first.")
+
+        # for row in self.supplier_rental_invoice_table:
+        #     if not row.supplier_rental_contract:
+        #         continue
+
+        #     contract_company = frappe.db.get_value(
+        #         "Supplier Rental Contract",
+        #         row.supplier_rental_contract,
+        #         "custom_company"
+        #     )
+
+        #     if contract_company != self.custom_company:
+        #         frappe.throw(
+        #             f"""
+        #             Company mismatch detected.<br><br>
+        #             <b>Supplier Rental Invoice Company:</b> {self.custom_company}<br>
+        #             <b>Contract:</b> {row.supplier_rental_contract}<br>
+        #             <b>Contract Company:</b> {contract_company}<br><br>
+        #             Please select contracts belonging to the same company.
+        #             """,
+        #             title="Company Mismatch"
+        #         )
 
         doc = self
 
@@ -25,8 +54,22 @@ class SupplierRentalInvoice(Document):
         invoice_month_start = getdate(doc.from_date)
         invoice_month_end = getdate(doc.to_date)
 
+        today = getdate()
+        if (
+            invoice_month_start.year == today.year
+            and invoice_month_start.month == today.month
+            and today < invoice_month_end
+        ):
+            invoice_month_end = today
+
         # --- Fetch eligible contracts ---
-        filters = {"supplier": doc.supplier, "docstatus": 1}
+        filters = {
+            "supplier": doc.supplier,
+            "docstatus": 1,
+            "custom_company": doc.custom_company
+        }
+
+        #frappe.msgprint(f"Company {doc.custom_company}")
 
         if doc.vehicle: filters["vehicle"] = doc.vehicle
         if doc.status: filters["status"] = doc.status
@@ -212,7 +255,7 @@ def is_already_invoiced(supplier_rental_invoice):
             "docstatus": ["!=", 2]
         }
     )
-
+    
 
 
 

@@ -117,7 +117,8 @@ frappe.ui.form.on('Payment Entry', {
         frm.set_query("custom_cheque_book", () => {
             return {
                 filters: {
-                    company: frm.doc.company
+                    company: frm.doc.company,
+                    is_active: 1
                 }
             };
         });
