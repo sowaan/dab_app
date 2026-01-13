@@ -47,7 +47,7 @@ class DABPayrollEntry(PayrollEntry):
 
         if not employees:
             error_msg = _(
-                "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}<br>Projectin Employee:{3} "
+                "No employees found for the mentioned criteria:<br>Company: {0}<br> Currency: {1}<br>Payroll Payable Account: {2}"
             ).format(
                 frappe.bold(self.company),
                 frappe.bold(self.currency),

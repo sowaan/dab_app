@@ -1,5 +1,20 @@
 frappe.ui.form.on('Payment Entry', {
+    setup(frm) {
+        // --------------------------------------------------
+        // Filter cheque books by Company + Active
+        // --------------------------------------------------
+        frm.set_query("custom_cheque_book", () => {
+            return {
+                filters: {
+                    company: frm.doc.company,
+                    is_active: 1
+                }
+            };
+        });
+    },
+
     refresh(frm) {
+        // UI only — NO set_value here
         enforce_cheque_ui(frm);
     },
 
@@ -11,31 +26,43 @@ frappe.ui.form.on('Payment Entry', {
         enforce_cheque_ui(frm);
     },
 
-    custom_cheque_book(frm) {
-        generate_cheque_no(frm);
-    }
-});
+    company(frm) {
+        // User action → safe to clear
+        frm.set_value("custom_cheque_book", null);
+        frm.set_value("custom_cheque_no", null);
+    },
 
-frappe.ui.form.on('Payment Entry', {
     custom_cheque_book(frm) {
-        // ❌ Cheque book cleared → remove cheque no
+        // ---------------------------------------------
+        // User cleared cheque book → clear cheque no
+        // ---------------------------------------------
         if (!frm.doc.custom_cheque_book) {
             frm.set_value("custom_cheque_no", null);
             return;
         }
 
-        // ✅ Cheque book selected → generate cheque no
+        // ---------------------------------------------
+        // Do NOT mutate values during save / workflow
+        // ---------------------------------------------
+        if (frm.is_saving || frm.doc.__unsaved === 0 || frm.doc.docstatus !== 0) {
+            return;
+        }
+
+        // ---------------------------------------------
+        // Generate cheque number (user-triggered only)
+        // ---------------------------------------------
         generate_cheque_no(frm);
     }
 });
 
 /* ============================================================
    Enforce Cheque UI (Payment Type + MoP Type)
+   UI ONLY — no set_value here
    ============================================================ */
 
 function enforce_cheque_ui(frm) {
     if (!frm.doc.mode_of_payment) {
-        hide_cheque_fields(frm);
+        hide_cheque_ui(frm);
         return;
     }
 
@@ -52,37 +79,34 @@ function enforce_cheque_ui(frm) {
             mop_type === "Bank";
 
         // 🔥 Hard override (ERPNext-safe)
-        frm.fields_dict["custom_cheque_book"].df.hidden = !show_cheque;
-        frm.fields_dict["custom_cheque_no"].df.hidden = !show_cheque;
+        frm.fields_dict.custom_cheque_book.df.hidden = !show_cheque;
+        frm.fields_dict.custom_cheque_no.df.hidden = !show_cheque;
 
-        frm.fields_dict["custom_cheque_book"].df.reqd = show_cheque;
-        frm.fields_dict["custom_cheque_no"].df.reqd = show_cheque;
+        frm.fields_dict.custom_cheque_book.df.reqd = show_cheque;
+        frm.fields_dict.custom_cheque_no.df.reqd = show_cheque;
 
         frm.refresh_field("custom_cheque_book");
         frm.refresh_field("custom_cheque_no");
 
         if (!show_cheque) {
-            hide_cheque_fields(frm);
+            hide_cheque_ui(frm);
         }
     });
 }
 
-function hide_cheque_fields(frm) {
-    frm.set_value("custom_cheque_book", null);
-    frm.set_value("custom_cheque_no", null);
+function hide_cheque_ui(frm) {
+    frm.fields_dict.custom_cheque_book.df.hidden = 1;
+    frm.fields_dict.custom_cheque_no.df.hidden = 1;
 
-    frm.fields_dict["custom_cheque_book"].df.hidden = 1;
-    frm.fields_dict["custom_cheque_no"].df.hidden = 1;
-
-    frm.fields_dict["custom_cheque_book"].df.reqd = 0;
-    frm.fields_dict["custom_cheque_no"].df.reqd = 0;
+    frm.fields_dict.custom_cheque_book.df.reqd = 0;
+    frm.fields_dict.custom_cheque_no.df.reqd = 0;
 
     frm.refresh_field("custom_cheque_book");
     frm.refresh_field("custom_cheque_no");
 }
 
 /* ============================================================
-   Generate cheque number on cheque book selection
+   Generate cheque number (USER ACTION ONLY)
    ============================================================ */
 
 function generate_cheque_no(frm) {
@@ -94,12 +118,12 @@ function generate_cheque_no(frm) {
         method: "dab_app.api.cheque.get_next_cheque_number",
         args: {
             cheque_book: frm.doc.custom_cheque_book,
-            payment_entry: frm.doc.name   // 👈 important (see below)
+            payment_entry: frm.doc.name
         },
         callback(res) {
-            if (res.message) {
-                // Force show before setting value
-                frm.fields_dict["custom_cheque_no"].df.hidden = 0;
+            if (res.message && frm.doc.custom_cheque_no !== res.message) {
+                // Force visible before setting
+                frm.fields_dict.custom_cheque_no.df.hidden = 0;
                 frm.refresh_field("custom_cheque_no");
 
                 frm.set_value("custom_cheque_no", res.message);
@@ -107,26 +131,3 @@ function generate_cheque_no(frm) {
         }
     });
 }
-
-/* ============================================================
-   Filtering Cheque Books by Selected Company
-   ============================================================ */
-   
-frappe.ui.form.on('Payment Entry', {
-    setup(frm) {
-        frm.set_query("custom_cheque_book", () => {
-            return {
-                filters: {
-                    company: frm.doc.company,
-                    is_active: 1
-                }
-            };
-        });
-    },
-
-    company(frm) {
-        // Clear cheque book if company changes
-        frm.set_value("custom_cheque_book", null);
-        frm.set_value("custom_cheque_no", null);
-    }
-});
