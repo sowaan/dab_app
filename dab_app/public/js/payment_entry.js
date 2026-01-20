@@ -66,32 +66,34 @@ function enforce_cheque_ui(frm) {
         return;
     }
 
-    frappe.db.get_value(
-        "Mode of Payment",
-        frm.doc.mode_of_payment,
-        "type"
-    ).then(r => {
-        const mop_type = r.message?.type;
+    // frappe.db.get_value(
+    //     "Mode of Payment",
+    //     frm.doc.mode_of_payment,
+    //     "type"
+    // ).then(r => {
+    const is_cheque = !!frm.doc.custom_is_cheque;
 
-        const show_cheque =
-            (frm.doc.payment_type === "Pay" ||
-             frm.doc.payment_type === "Internal Transfer") &&
-            mop_type === "Bank";
+        //const mop_type = r.message?.type;
+    
+    const valid_payment_type =
+    frm.doc.payment_type === "Pay" ||
+    frm.doc.payment_type === "Internal Transfer";
 
-        // 🔥 Hard override (ERPNext-safe)
-        frm.fields_dict.custom_cheque_book.df.hidden = !show_cheque;
-        frm.fields_dict.custom_cheque_no.df.hidden = !show_cheque;
+    const show_cheque = is_cheque && valid_payment_type;
+    // 🔥 Hard override (ERPNext-safe)
+    frm.fields_dict.custom_cheque_book.df.hidden = !show_cheque;
+    frm.fields_dict.custom_cheque_no.df.hidden = !show_cheque;
 
-        frm.fields_dict.custom_cheque_book.df.reqd = show_cheque;
-        frm.fields_dict.custom_cheque_no.df.reqd = show_cheque;
+    frm.fields_dict.custom_cheque_book.df.reqd = show_cheque;
+    frm.fields_dict.custom_cheque_no.df.reqd = show_cheque;
 
-        frm.refresh_field("custom_cheque_book");
-        frm.refresh_field("custom_cheque_no");
+    frm.refresh_field("custom_cheque_book");
+    frm.refresh_field("custom_cheque_no");
 
-        if (!show_cheque) {
-            hide_cheque_ui(frm);
-        }
-    });
+    if (!show_cheque) {
+        hide_cheque_ui(frm);
+    }
+    
 }
 
 function hide_cheque_ui(frm) {
@@ -131,3 +133,9 @@ function generate_cheque_no(frm) {
         }
     });
 }
+
+frappe.ui.form.on('Payment Entry', {
+    custom_is_cheque(frm) {
+        enforce_cheque_ui(frm);
+    }
+});
