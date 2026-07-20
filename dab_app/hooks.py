@@ -74,7 +74,8 @@ doc_events = {
 
 
 doctype_js = {
-    "Payment Entry": "public/js/payment_entry.js"
+    "Payment Entry": "public/js/payment_entry.js",
+    "Payment Reconciliation": "public/js/payment_reconciliation.js"
 }
 
 # include js, css files in header of desk.html
