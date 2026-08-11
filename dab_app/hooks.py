@@ -50,7 +50,13 @@ fixtures = [
     {
 		"doctype":"Custom Field",
 		"filters":[["module", "=", "DAB App"]]
-	}
+	},
+    {
+        "doctype": "Server Script",
+        "filters": [
+            ["name", "in", ["Email Notification for Expiry Documents"]]
+        ]
+    }
 ]
 
 
