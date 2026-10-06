@@ -253,9 +253,9 @@ doc_events = {
 # Overriding Methods
 # ------------------------------
 #
-# override_whitelisted_methods = {
-# 	"frappe.desk.doctype.event.event.get_events": "dab_app.event.get_events"
-# }
+override_whitelisted_methods = {
+	"frappe.desk.query_report.export_query": "dab_app.overrides.query_report.export_query"
+}
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
